@@ -1,0 +1,52 @@
+{
+  "info": {
+    "_postman_id": "3ffe175a-738c-4d4d-960d-d19aff5f839d",
+    "name": "Rate Hub",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26018072"
+  },
+  "item": [
+    {
+      "name": "All Pair",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8282/api/rates",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8282",
+          "path": [
+            "api",
+            "rates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find By Pair",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8282/api/rates/USD/TRY",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8282",
+          "path": [
+            "api",
+            "rates",
+            "USD",
+            "TRY"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

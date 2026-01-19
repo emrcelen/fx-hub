@@ -1,0 +1,36 @@
+networks:
+  rate-net:
+    driver: bridge
+  shared-net:
+    external: true
+services:
+  rate-hub:
+    build: .
+    image: rate-hub:latest
+    environment:
+      PORT: 9090
+      HZ_CLUSTER: rate-hub
+      HZ_BACKUP_COUNT: 1
+      HZ_MEMBERS: rate-hub
+      RABBIT_HOST: rabbitmq
+      RABBIT_PORT: 5672
+      RABBIT_USER: root
+      RABBIT_PASS: root
+      SNAPSHOT_TTL_SECONDS: 60
+      INVALID_REFRESH_TTL_SECONDS: 15
+    deploy:
+      replicas: 3
+    networks:
+      - shared-net
+  nginx:
+    image: nginx:alpine
+    container_name: rate-hub-nginx
+    ports:
+      - "8282:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/html:/usr/share/nginx/html:ro
+    depends_on:
+      - rate-hub
+    networks:
+      - shared-net

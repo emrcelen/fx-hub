@@ -1,0 +1,68 @@
+{
+  "info": {
+    "_postman_id": "34c715ec-cd87-4cc7-bf04-6bdd9ce1eeab",
+    "name": "Rate Producer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26018072"
+  },
+  "item": [
+    {
+      "name": "Create Rate Event - 1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"pair\": \"EUR/USD\",\r\n  \"bid\": \"1.0845\",\r\n  \"ask\": \"1.0847\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8181/api/rates",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8181",
+          "path": [
+            "api",
+            "rates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Rate Event - 2",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"pair\": \"USD/TRY\",\r\n  \"bid\": \"12.0845\",\r\n  \"ask\": \"14.0847\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8182/api/rates",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8182",
+          "path": [
+            "api",
+            "rates"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

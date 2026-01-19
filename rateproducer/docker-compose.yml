@@ -1,0 +1,68 @@
+networks:
+  rate-db:
+    driver: bridge
+  shared-net:
+    external: true
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: fx_rate
+      POSTGRES_USER: rate_user
+      POSTGRES_PASSWORD: rate_pass
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U rate_user -d fx_rate" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rate-db
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rate-rabbit
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: root
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - shared-net
+  rate-producer:
+    build: .
+    image: rate-producer:latest
+    environment:
+      PORT: 8181
+      MANAGEMENT_PORT: 8181
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: fx_rate
+      DB_USER: rate_user
+      DB_PASSWORD: rate_pass
+      DB_CONTEXT: development
+      RABBIT_MQ_HOST: rabbitmq
+      RABBIT_MQ_PORT: 5672
+      RABBIT_MQ_USER: root
+      RABBIT_MQ_PASS: root
+      OUTBOX_POLL_DELAY_MS: 200
+      OUTBOX_WATCHDOG_DELAY_MS: 10000
+      POOL_NAME: HikariPool-RateProducer
+    depends_on:
+      - db
+      - rabbitmq
+    deploy:
+      replicas: 2
+    ports:
+      - "8181-8182:8181"
+    networks:
+      - shared-net
+      - rate-db
+volumes:
+  pg_data:

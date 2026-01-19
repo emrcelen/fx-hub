@@ -1,0 +1,20 @@
+server:
+  port: ${PORT:8282}
+
+spring:
+  application:
+    name: rate-hub
+    instance-name: ${HOSTNAME}
+  rabbitmq:
+    host: ${RABBIT_HOST:localhost}
+    port: ${RABBIT_PORT:5672}
+    username: ${RABBIT_USER:root}
+    password: ${RABBIT_PASS:root}
+gateway:
+  rates:
+    snapshot-ttl-seconds: ${SNAPSHOT_TTL_SECONDS:60}
+    invalid-refresh-ttl-seconds: ${INVALID_REFRESH_TTL_SECONDS:15}
+hazelcast:
+  cluster-name: ${HZ_CLUSTER:rate-hub}
+  backup-count: ${HZ_BACKUP_COUNT:1}
+  members: ${HZ_MEMBERS:127.0.0.1}

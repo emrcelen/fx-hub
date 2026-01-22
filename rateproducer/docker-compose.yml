@@ -12,11 +12,10 @@ services:
       POSTGRES_DB: fx_rate
       POSTGRES_USER: rate_user
       POSTGRES_PASSWORD: rate_pass
-      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U rate_user -d fx_rate" ]
       interval: 5s
@@ -55,8 +54,10 @@ services:
       OUTBOX_WATCHDOG_DELAY_MS: 10000
       POOL_NAME: HikariPool-RateProducer
     depends_on:
-      - db
-      - rabbitmq
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
     deploy:
       replicas: 2
     ports:

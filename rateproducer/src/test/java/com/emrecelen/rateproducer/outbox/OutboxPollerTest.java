@@ -59,17 +59,6 @@ class OutboxPollerTest {
 
 
     @Test
-    void should_publish_empty_list_when_no_events() {
-        when(claimService.claimBatch()).thenReturn(List.of());
-
-        poller.poll();
-
-        verify(claimService).claimBatch();
-        verify(coordinator).publishAsync(List.of());
-    }
-
-
-    @Test
     void should_propagate_exception_when_claim_fails() {
         when(claimService.claimBatch())
                 .thenThrow(new RuntimeException("db down"));

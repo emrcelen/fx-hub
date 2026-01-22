@@ -4,6 +4,8 @@ import com.emrecelen.rateproducer.common.Constants.OutboxType;
 import com.emrecelen.rateproducer.common.JsonUtil;
 import com.emrecelen.rateproducer.model.OutboxEvent;
 import com.emrecelen.rateproducer.outbox.publisher.EventPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 public class RateRabbitPublisher implements EventPublisher {
 
     private final RabbitTemplate rabbit;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     public RateRabbitPublisher(RabbitTemplate rabbit) {
         this.rabbit = rabbit;
@@ -23,6 +27,12 @@ public class RateRabbitPublisher implements EventPublisher {
 
     @Override
     public void publish(OutboxEvent event) {
+        log.debug(
+                "Publishing rate event to RabbitMQ. eventKey={}, schemaVersion={}",
+                event.getEventKey(),
+                event.getSchemaVersion()
+        );
+
         rabbit.convertAndSend(
                 "rate.exchange",
                 "rate.update",
@@ -34,6 +44,10 @@ public class RateRabbitPublisher implements EventPublisher {
                     msg.getMessageProperties().setContentType("application/json");
                     return msg;
                 }
+        );
+        log.info(
+                "Rate event published successfully. eventKey={}",
+                event.getEventKey()
         );
     }
 }
